@@ -6,9 +6,9 @@
 help: ## Display help message
 	@grep -E '^[0-9a-zA-Z_-]+\.*[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: deploy_dc1_dci
-deploy_dc1_dci: ## Deploy DC1 DCI configs to non-avd devices
-	ansible-playbook playbooks/deploy_dc1_dci_eapi.yml -i sites/dc1/inventory.yml
+.PHONY: preplab
+preplab: ## Deploy configs, via eAPI, to prep the lab environment
+	ansible-playbook playbooks/preplab.yml -i extra_configs/inventory.yml
 
 .PHONY: deploy_dc2_dci
 deploy_dc2_dci: ## Deploy DC1 DCI configs to non-avd devices
