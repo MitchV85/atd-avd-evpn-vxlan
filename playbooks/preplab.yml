@@ -3,7 +3,11 @@
   hosts: LAB
   tasks:
 
+    - name: Import Global Vars
+      ansible.builtin.include_vars: "{{ item }}"
+      with_items:
+        - "../global_vars/global_vars.yml"
+
     - name: Load configuration from file
       arista.eos.eos_config:
-        src: extra_configs/{{inventory_hostname}}.cfg
-
+        src: ../extra_configs/{{inventory_hostname}}.cfg
