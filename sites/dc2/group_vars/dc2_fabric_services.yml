@@ -1,5 +1,4 @@
 ---
-# DC2 fab services vars
 
 tenants:
   ATD_DC:
