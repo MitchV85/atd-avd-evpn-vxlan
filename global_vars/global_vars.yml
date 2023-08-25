@@ -56,6 +56,10 @@ ntp:
       iburst: true
       local_interface: Management0
 
+# Switchport defaults
+switchport_default:
+  mode: routed
+
 # TerminAttr
 daemon_terminattr:
   # Address of the gRPC server on CloudVision

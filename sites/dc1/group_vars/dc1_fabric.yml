@@ -1,13 +1,22 @@
 ---
 
-fabric_name: dc1_fabric
+fabric_name: DC1_FABRIC
 
-underlay_routing_protocol: EBGP
-overlay_routing_protocol: EBGP
+underlay_routing_protocol: ebgp
+overlay_routing_protocol: ebgp
 
 p2p_uplinks_mtu: 9214
 
 evpn_import_pruning: true
+
+bgp_distance:
+  external_routes: 20
+  internal_routes: 200
+  local_routes: 200
+
+bgp_graceful_restart:
+  enabled: true
+  restart_time: 300
 
 bgp_peer_groups:
   ipv4_underlay_peers:
@@ -30,19 +39,13 @@ spine:
   defaults:
     platform: ceos
     bgp_as: 65000
-    loopback_ipv4_pool: 10.1.0.0/24
-    bgp_defaults:
-      - 'no bgp default ipv4-unicast'
-      - 'distance bgp 20 200 200'
-      - 'neighbor default send-community'
-      - 'graceful-restart restart-time 300'
-      - 'graceful-restart'
+    loopback_ipv4_pool: 10.0.0.0/24
   nodes:
     - name: s1-spine1
-      id: 10
+      id: 1
       mgmt_ip: 192.168.0.10/24
     - name: s1-spine2
-      id: 12
+      id: 2
       mgmt_ip: 192.168.0.11/24
 
 ##################################################
@@ -51,23 +54,17 @@ spine:
 l3leaf:
   defaults:
     platform: ceos
-    loopback_ipv4_pool: 10.1.0.0/24
+    loopback_ipv4_pool: 10.0.0.0/24
     vtep_loopback_ipv4_pool: 10.1.1.0/24
     uplink_interfaces: [Ethernet2, Ethernet3]
     uplink_switches: [s1-spine1, s1-spine2]
-    uplink_ipv4_pool: 10.255.0.0/22
+    uplink_ipv4_pool: 172.20.0.0/22
     mlag_interfaces: [Ethernet1, Ethernet6]
-    mlag_peer_ipv4_pool: 192.0.0.0/24
-    mlag_peer_l3_ipv4_pool: 192.1.1.0/24
+    mlag_peer_ipv4_pool: 192.0.0.0/31
+    mlag_peer_l3_ipv4_pool: 192.1.1.0/31
     mlag_port_channel_id: 1000
     virtual_router_mac_address: 00:1c:73:00:00:01
-    bgp_defaults:
-      - 'no bgp default ipv4-unicast'
-      - 'distance bgp 20 200 200'
-      - 'neighbor default send-community'
-      - 'graceful-restart restart-time 300'
-      - 'graceful-restart'
-    spanning_tree_mode: rapid-pvst
+    spanning_tree_mode: mstp
     spanning_tree_priority: 0
     structured_config:
       spanning_tree:
@@ -77,32 +74,24 @@ l3leaf:
     ####################################################
     # DC1 Border Leafs                                 #
     ####################################################
-    - group: BrdrLeafs
+    - group: BORDER_LEAFS
       platform: ceos
-      structured_config:
-        router_bgp:
-          address_family_ipv4:
-            networks:
-              10.231.0.2/32:
-              10.231.0.4/32:
-              10.231.1.2/32:
       filter:
-        tenants: [ATD_DC]
-        tags: ['DC']
-      bgp_as: 65099
+        tenants: ['LAB']
+      bgp_as: 65103
       evpn_gateway:
         evpn_l2:
           enabled: true
         remote_peers:
         - hostname: s2-brdr1
           ip_address: 10.1.0.102
-          bgp_as: 65199
+          bgp_as: 65203
         - hostname: s2-brdr2
           ip_address: 10.1.0.104
-          bgp_as: 65199
+          bgp_as: 65203
       nodes:
         - name: s1-brdr1
-          id: 2
+          id: 105
           mgmt_ip: 192.168.0.100/24
           uplink_switch_interfaces: [Ethernet7, Ethernet7]
           uplink_interfaces: [Ethernet2, Ethernet3]
@@ -111,15 +100,15 @@ l3leaf:
             router_bgp:
               neighbors:
                 172.16.255.1:
-                  remote_as: 65501
+                  remote_as: 65000
                   description: s1-core1 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
                 172.16.255.3:
-                  remote_as: 65501
+                  remote_as: 65000
                   description: s1-core2 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
         - name: s1-brdr2
-          id: 4
+          id: 106
           mgmt_ip: 192.168.0.101/24
           uplink_switch_interfaces: [Ethernet8, Ethernet8]
           uplink_interfaces: [Ethernet2, Ethernet3]
@@ -128,11 +117,11 @@ l3leaf:
             router_bgp:
               neighbors:
                 172.16.255.5:
-                  remote_as: 65501
+                  remote_as: 65000
                   description: s1-core1 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
                 172.16.255.7:
-                  remote_as: 65501
+                  remote_as: 65000
                   description: s1-core2 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
 
@@ -141,18 +130,34 @@ l3leaf:
     ####################################################
     - group: LeafPair1
       filter:
-        tenants: [ATD_DC]
-        tags: ['DC']
-      bgp_as: 65001
+        tenants: ['LAB']
+      bgp_as: 65101
       nodes:
         - name: s1-leaf1
-          id: 14
+          id: 101
           mgmt_ip: 192.168.0.12/24
           uplink_switch_interfaces: [Ethernet2, Ethernet2]
         - name: s1-leaf2
-          id: 16
+          id: 102
           mgmt_ip: 192.168.0.13/24
           uplink_switch_interfaces: [Ethernet3, Ethernet3]
+
+    ####################################################
+    # DC1 Leaf Pair 2                                  #
+    ####################################################
+    - group: LeafPair2
+      filter:
+        tenants: ['LAB']
+      bgp_as: 65102
+      nodes:
+        - name: s1-leaf3
+          id: 103
+          mgmt_ip: 192.168.0.12/24
+          uplink_switch_interfaces: [Ethernet4, Ethernet4]
+        - name: s1-leaf4
+          id: 104
+          mgmt_ip: 192.168.0.13/24
+          uplink_switch_interfaces: [Ethernet5, Ethernet5]
 
 ####################################################
 # External Fabric PtP L3 Conncectivity             #
