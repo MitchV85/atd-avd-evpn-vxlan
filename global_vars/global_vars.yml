@@ -13,8 +13,25 @@ ansible_httpapi_port: 443
 ansible_httpapi_use_ssl: true
 ansible_httpapi_validate_certs: false
 ansible_python_interpreter: $(which python3)
-avd_data_conversion_mode: error
-avd_data_validation_mode: error
+# avd_data_conversion_mode: error
+# avd_data_validation_mode: error
+
+# AAA
+aaa_authorization:
+  exec:
+    default: local
+
+# ARP timer (Should always be less than the MAC timer)
+arp:
+  aging:
+    timeout_default: 1500
+
+# Domain/DNS
+dns_domain: atd.lab
+
+# Event-monitor
+event_monitor:
+  enabled: true
 
 # Local Users
 local_users:
@@ -23,10 +40,9 @@ local_users:
     role: network-admin
     sha512_password: "{{ ansible_password | password_hash(salt='workshop') }}"
 
-# AAA
-aaa_authorization:
-  exec:
-    default: local
+#MAC timer (Should always be greater than the ARP timer)
+mac_address_table:
+  aging_time: 1800
 
 # OOB Management network default gateway.
 mgmt_gateway: 192.168.0.1
@@ -39,9 +55,6 @@ ntp:
     - name: 192.168.0.1
       iburst: true
       local_interface: Management0
-
-# Domain/DNS
-dns_domain: atd.lab
 
 # TerminAttr
 daemon_terminattr:
