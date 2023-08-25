@@ -6,17 +6,13 @@ help: ## Display help message
 # Site 1
 ########################################################
 
-.PHONY: ping-site-1
-ping-site-1: ## Ping Nodes
-	ansible-playbook playbooks/ping.yml -i sites/site1/inventory.yml -e "target_hosts=SITE1_FABRIC"
-
 .PHONY: build-site-1
 build-site-1: ## Build Configs
 	ansible-playbook playbooks/build.yml -i sites/site1/inventory.yml -e "target_hosts=SITE1_FABRIC"
 
 .PHONY: deploy-site-1
 deploy-site-1: ## Deploy Configs via eAPI
-	ansible-playbook playbooks/deploy_eapi.yml -i sites/site1/inventory.yml -e "target_hosts=SITE1_FABRIC"
+	ansible-playbook playbooks/deploy.yml -i sites/site1/inventory.yml -e "target_hosts=SITE1_FABRIC"
 
 .PHONY: cvp-site-1
 cvp-site-1: ## Deploy Configs via eAPI

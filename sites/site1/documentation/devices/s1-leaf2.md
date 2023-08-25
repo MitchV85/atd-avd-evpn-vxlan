@@ -259,12 +259,25 @@ vlan internal order ascending range 1006 1199
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
+| 10 | Ten | - |
+| 20 | Twenty | - |
+| 3001 | MLAG_iBGP_A | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
 ### VLANs Device Configuration
 
 ```eos
+!
+vlan 10
+   name Ten
+!
+vlan 20
+   name Twenty
+!
+vlan 3001
+   name MLAG_iBGP_A
+   trunk group LEAF_PEER_L3
 !
 vlan 4093
    name LEAF_PEER_L3
@@ -430,6 +443,9 @@ interface Loopback1
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
+| Vlan10 | Ten | A | 9014 | False |
+| Vlan20 | Twenty | A | 9014 | False |
+| Vlan3001 | MLAG_PEER_L3_iBGP: vrf A | A | 9214 | False |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 9214 | False |
 | Vlan4094 | MLAG_PEER | default | 9214 | False |
 
@@ -437,12 +453,36 @@ interface Loopback1
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan10 |  A  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan20 |  A  |  -  |  10.20.20.1/24  |  -  |  -  |  -  |  -  |
+| Vlan3001 |  A  |  192.2.2.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  192.1.1.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  192.0.0.1/31  |  -  |  -  |  -  |  -  |  -  |
 
 #### VLAN Interfaces Device Configuration
 
 ```eos
+!
+interface Vlan10
+   description Ten
+   no shutdown
+   mtu 9014
+   vrf A
+   ip address virtual 10.10.10.1/24
+!
+interface Vlan20
+   description Twenty
+   no shutdown
+   mtu 9014
+   vrf A
+   ip address virtual 10.20.20.1/24
+!
+interface Vlan3001
+   description MLAG_PEER_L3_iBGP: vrf A
+   no shutdown
+   mtu 9214
+   vrf A
+   ip address 192.2.2.1/31
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
@@ -468,6 +508,19 @@ interface Vlan4094
 | UDP port | 4789 |
 | EVPN MLAG Shared Router MAC | mlag-system-id |
 
+##### VLAN to VNI, Flood List and Multicast Group Mappings
+
+| VLAN | VNI | Flood List | Multicast Group |
+| ---- | --- | ---------- | --------------- |
+| 10 | 10010 | - | - |
+| 20 | 10020 | - | - |
+
+##### VRF to VNI and Multicast Group Mappings
+
+| VRF | VNI | Multicast Group |
+| ---- | --- | --------------- |
+| A | 50001 | - |
+
 #### VXLAN Interface Device Configuration
 
 ```eos
@@ -477,6 +530,9 @@ interface Vxlan1
    vxlan source-interface Loopback1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 20 vni 10020
+   vxlan vrf A vni 50001
 ```
 
 ## Routing
@@ -510,12 +566,14 @@ ip virtual-router mac-address 00:1c:73:00:00:01
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | True |
+| A | True |
 
 #### IP Routing Device Configuration
 
 ```eos
 !
 ip routing
+ip routing vrf A
 ```
 
 ### IPv6 Routing
@@ -525,6 +583,7 @@ ip routing
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | False |
+| A | false |
 | default | false |
 
 ### Static Routes
@@ -602,6 +661,7 @@ Global ARP timeout: 1500
 | 172.20.1.148 | 65000 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 | 172.20.1.150 | 65000 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 | 192.1.1.0 | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | - | - | - | - | - |
+| 192.2.2.0 | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | A | - | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -612,6 +672,19 @@ Global ARP timeout: 1500
 | Peer Group | Activate | Encapsulation |
 | ---------- | -------- | ------------- |
 | EVPN-OVERLAY-LOCAL-PEERS | True | default |
+
+#### Router BGP VLANs
+
+| VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
+| ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
+| 10 | 10.0.0.102:10010 | 10010:10010 | - | - | learned |
+| 20 | 10.0.0.102:10020 | 10020:10020 | - | - | learned |
+
+#### Router BGP VRFs
+
+| VRF | Route-Distinguisher | Redistribute |
+| --- | ------------------- | ------------ |
+| A | 10.0.0.102:50001 | connected |
 
 #### Router BGP Device Configuration
 
@@ -659,6 +732,16 @@ router bgp 65101
    neighbor 192.1.1.0 description s1-leaf1
    redistribute connected route-map RM-CONN-2-BGP
    !
+   vlan 10
+      rd 10.0.0.102:10010
+      route-target both 10010:10010
+      redistribute learned
+   !
+   vlan 20
+      rd 10.0.0.102:10020
+      route-target both 10020:10020
+      redistribute learned
+   !
    address-family evpn
       neighbor EVPN-OVERLAY-LOCAL-PEERS activate
       route import match-failure action discard
@@ -667,6 +750,14 @@ router bgp 65101
       no neighbor EVPN-OVERLAY-LOCAL-PEERS activate
       neighbor IPV4-UNDERLAY-PEERS activate
       neighbor MLAG-IPV4-UNDERLAY-PEER activate
+   !
+   vrf A
+      rd 10.0.0.102:50001
+      route-target import evpn 50001:50001
+      route-target export evpn 50001:50001
+      router-id 10.0.0.102
+      neighbor 192.2.2.0 peer group MLAG-IPV4-UNDERLAY-PEER
+      redistribute connected
 ```
 
 ## BFD
@@ -758,8 +849,11 @@ route-map RM-MLAG-PEER-IN permit 10
 
 | VRF Name | IP Routing |
 | -------- | ---------- |
+| A | enabled |
 
 ### VRF Instances Device Configuration
 
 ```eos
+!
+vrf instance A
 ```

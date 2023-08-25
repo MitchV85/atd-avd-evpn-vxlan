@@ -1,7 +1,7 @@
 ---
 
 tenants:
-  ATD_DC:
+  LAB:
     mac_vrf_vni_base: 10000
     evpn_l2_multi_domain: false
     vrfs:

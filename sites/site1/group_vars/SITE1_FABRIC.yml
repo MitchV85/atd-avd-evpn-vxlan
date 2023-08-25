@@ -156,11 +156,11 @@ l3leaf:
       nodes:
         - name: s1-leaf3
           id: 103
-          mgmt_ip: 192.168.0.12/24
+          mgmt_ip: 192.168.0.14/24
           uplink_switch_interfaces: [Ethernet4, Ethernet4]
         - name: s1-leaf4
           id: 104
-          mgmt_ip: 192.168.0.13/24
+          mgmt_ip: 192.168.0.15/24
           uplink_switch_interfaces: [Ethernet5, Ethernet5]
 
 ####################################################
