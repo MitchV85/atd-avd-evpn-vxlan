@@ -9,6 +9,6 @@
       ansible.builtin.import_role:
         name: arista.avd.eos_config_deploy_cvp
       vars:
-        container_root: 'SITE1_FABRIC'
+        container_root: "{{ container_root }}"
         configlets_prefix: 'AVD'
         state: present
