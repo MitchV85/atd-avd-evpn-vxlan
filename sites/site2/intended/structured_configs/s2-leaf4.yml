@@ -1,0 +1,343 @@
+hostname: s2-leaf4
+router_bgp:
+  as: '65202'
+  router_id: 10.0.0.204
+  distance:
+    external_routes: 20
+    internal_routes: 200
+    local_routes: 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  graceful_restart:
+    enabled: true
+    restart_time: 300
+  peer_groups:
+  - name: MLAG-IPV4-UNDERLAY-PEER
+    type: ipv4
+    remote_as: '65202'
+    next_hop_self: true
+    description: s2-leaf3
+    password: ADxOpgx5ZlhiYi15YOWc6A==
+    maximum_routes: 12000
+    send_community: all
+    route_map_in: RM-MLAG-PEER-IN
+  - name: IPV4-UNDERLAY-PEERS
+    type: ipv4
+    password: Z2jq9TIjUWPAqnO+1XFZIw==
+    maximum_routes: 12000
+    send_community: all
+  - name: EVPN-OVERLAY-LOCAL-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    password: HeaxjG3Gq3lrbAtR9/Ht0w==
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+  address_family_ipv4:
+    peer_groups:
+    - name: MLAG-IPV4-UNDERLAY-PEER
+      activate: true
+    - name: IPV4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-LOCAL-PEERS
+      activate: false
+  neighbors:
+  - ip_address: 192.1.1.0
+    peer_group: MLAG-IPV4-UNDERLAY-PEER
+    description: s2-leaf3
+  - ip_address: 172.20.3.44
+    peer_group: IPV4-UNDERLAY-PEERS
+    remote_as: '65200'
+    description: s2-spine1_Ethernet5
+  - ip_address: 172.20.3.46
+    peer_group: IPV4-UNDERLAY-PEERS
+    remote_as: '65200'
+    description: s2-spine2_Ethernet5
+  - ip_address: 10.0.0.1
+    peer_group: EVPN-OVERLAY-LOCAL-PEERS
+    description: s2-spine1
+    remote_as: '65200'
+  - ip_address: 10.0.0.2
+    peer_group: EVPN-OVERLAY-LOCAL-PEERS
+    description: s2-spine2
+    remote_as: '65200'
+  redistribute_routes:
+  - source_protocol: connected
+    route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-LOCAL-PEERS
+      activate: true
+    route:
+      import_match_failure_action: discard
+  vrfs:
+  - name: A
+    router_id: 10.0.0.204
+    rd: 10.0.0.204:50001
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 50001:50001
+      export:
+      - address_family: evpn
+        route_targets:
+        - 50001:50001
+    redistribute_routes:
+    - source_protocol: connected
+    neighbors:
+    - ip_address: 192.2.2.0
+      peer_group: MLAG-IPV4-UNDERLAY-PEER
+  vlans:
+  - id: 10
+    tenant: LAB
+    rd: 10.0.0.204:10010
+    route_targets:
+      both:
+      - 10010:10010
+    redistribute_routes:
+    - learned
+  - id: 30
+    tenant: LAB
+    rd: 10.0.0.204:10030
+    route_targets:
+      both:
+      - 10030:10030
+    redistribute_routes:
+    - learned
+static_routes:
+- vrf: default
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 0
+  no_spanning_tree_vlan: 4093-4094
+  edge_port:
+    bpduguard_default: true
+local_users:
+- name: arista
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$workshop$jOI73Gwe1cjT1B/BP4iYhedVj1WHzZorR2aSprw6sBDXkjq/fLj17tDpD6SROY43ni/L3O5tlo/UaKfCkQjB6/
+vrfs:
+- name: default
+  ip_routing: false
+- name: A
+  tenant: LAB
+  ip_routing: true
+management_interfaces:
+- name: Management0
+  description: oob_management
+  shutdown: false
+  vrf: default
+  ip_address: 192.168.0.25/24
+  gateway: 192.168.0.1
+  type: oob
+mac_address_table:
+  aging_time: 1800
+management_api_http:
+  enable_vrfs:
+  - name: default
+  enable_https: true
+vlans:
+- id: 4093
+  tenant: system
+  name: LEAF_PEER_L3
+  trunk_groups:
+  - LEAF_PEER_L3
+- id: 4094
+  tenant: system
+  name: MLAG_PEER
+  trunk_groups:
+  - MLAG
+- id: 10
+  name: Ten
+  tenant: LAB
+- id: 30
+  name: Thirty
+  tenant: LAB
+- id: 3001
+  name: MLAG_iBGP_A
+  trunk_groups:
+  - LEAF_PEER_L3
+  tenant: LAB
+vlan_interfaces:
+- name: Vlan4093
+  description: MLAG_PEER_L3_PEERING
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.1.1.1/31
+- name: Vlan4094
+  description: MLAG_PEER
+  shutdown: false
+  ip_address: 192.0.0.1/31
+  no_autostate: true
+  mtu: 9214
+- name: Vlan10
+  tenant: LAB
+  tags:
+  - Prod
+  description: Ten
+  shutdown: false
+  mtu: 9014
+  ip_address_virtual: 10.10.10.1/24
+  vrf: A
+- name: Vlan30
+  tenant: LAB
+  tags:
+  - Dev
+  description: Thirty
+  shutdown: false
+  mtu: 9014
+  ip_address_virtual: 10.30.30.1/24
+  vrf: A
+- name: Vlan3001
+  tenant: LAB
+  type: underlay_peering
+  shutdown: false
+  description: 'MLAG_PEER_L3_iBGP: vrf A'
+  vrf: A
+  mtu: 9214
+  ip_address: 192.2.2.1/31
+port_channel_interfaces:
+- name: Port-Channel1000
+  description: MLAG_PEER_s2-leaf3_Po1000
+  type: switched
+  shutdown: false
+  mode: trunk
+  trunk_groups:
+  - LEAF_PEER_L3
+  - MLAG
+- name: Port-Channel4
+  description: s2-host2
+  type: switched
+  shutdown: false
+  mode: access
+  vlans: '10'
+  spanning_tree_portfast: edge
+  mlag: 4
+ethernet_interfaces:
+- name: Ethernet1
+  peer: s2-leaf3
+  peer_interface: Ethernet1
+  peer_type: mlag_peer
+  description: MLAG_PEER_s2-leaf3_Ethernet1
+  type: port-channel-member
+  shutdown: false
+  channel_group:
+    id: 1000
+    mode: active
+- name: Ethernet6
+  peer: s2-leaf3
+  peer_interface: Ethernet6
+  peer_type: mlag_peer
+  description: MLAG_PEER_s2-leaf3_Ethernet6
+  type: port-channel-member
+  shutdown: false
+  channel_group:
+    id: 1000
+    mode: active
+- name: Ethernet2
+  peer: s2-spine1
+  peer_interface: Ethernet5
+  peer_type: spine
+  description: P2P_LINK_TO_S2-SPINE1_Ethernet5
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 172.20.3.45/31
+- name: Ethernet3
+  peer: s2-spine2
+  peer_interface: Ethernet5
+  peer_type: spine
+  description: P2P_LINK_TO_S2-SPINE2_Ethernet5
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 172.20.3.47/31
+- name: Ethernet4
+  peer: s2-host2
+  peer_interface: eth2
+  peer_type: server
+  port_profile: PP-VLAN10
+  description: s2-host2_eth2
+  shutdown: false
+  type: port-channel-member
+  channel_group:
+    id: 4
+    mode: active
+mlag_configuration:
+  domain_id: LeafPair2
+  local_interface: Vlan4094
+  peer_address: 192.0.0.0
+  peer_link: Port-Channel1000
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
+route_maps:
+- name: RM-MLAG-PEER-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    set:
+    - origin incomplete
+    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+loopback_interfaces:
+- name: Loopback0
+  description: EVPN_Overlay_Peering
+  shutdown: false
+  ip_address: 10.0.0.204/32
+- name: Loopback1
+  description: VTEP_VXLAN_Tunnel_Source
+  shutdown: false
+  ip_address: 10.1.1.203/32
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.0.0.0/24 eq 32
+  - sequence: 20
+    action: permit 10.1.1.0/24 eq 32
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+ip_igmp_snooping:
+  globally_enabled: true
+ip_virtual_router_mac_address: 00:1c:73:00:00:01
+vxlan_interface:
+  Vxlan1:
+    description: s2-leaf4_VTEP
+    vxlan:
+      udp_port: 4789
+      source_interface: Loopback1
+      virtual_router_encapsulation_mac_address: mlag-system-id
+      vlans:
+      - id: 10
+        vni: 10010
+      - id: 30
+        vni: 10030
+      vrfs:
+      - name: A
+        vni: 50001

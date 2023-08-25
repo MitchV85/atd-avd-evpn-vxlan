@@ -249,6 +249,8 @@ switchport default mode routed
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet2 | P2P_LINK_TO_S2-LEAF1_Ethernet3 | routed | - | 172.20.3.34/31 | default | 9214 | False | - | - |
 | Ethernet3 | P2P_LINK_TO_S2-LEAF2_Ethernet3 | routed | - | 172.20.3.38/31 | default | 9214 | False | - | - |
+| Ethernet4 | P2P_LINK_TO_S2-LEAF3_Ethernet3 | routed | - | 172.20.3.42/31 | default | 9214 | False | - | - |
+| Ethernet5 | P2P_LINK_TO_S2-LEAF4_Ethernet3 | routed | - | 172.20.3.46/31 | default | 9214 | False | - | - |
 | Ethernet7 | P2P_LINK_TO_S2-BRDR1_Ethernet3 | routed | - | 172.20.3.50/31 | default | 9214 | False | - | - |
 | Ethernet8 | P2P_LINK_TO_S2-BRDR2_Ethernet3 | routed | - | 172.20.3.54/31 | default | 9214 | False | - | - |
 
@@ -269,6 +271,20 @@ interface Ethernet3
    mtu 9214
    no switchport
    ip address 172.20.3.38/31
+!
+interface Ethernet4
+   description P2P_LINK_TO_S2-LEAF3_Ethernet3
+   no shutdown
+   mtu 9214
+   no switchport
+   ip address 172.20.3.42/31
+!
+interface Ethernet5
+   description P2P_LINK_TO_S2-LEAF4_Ethernet3
+   no shutdown
+   mtu 9214
+   no switchport
+   ip address 172.20.3.46/31
 !
 interface Ethernet7
    description P2P_LINK_TO_S2-BRDR1_Ethernet3
@@ -410,10 +426,14 @@ Global ARP timeout: 1500
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
 | 10.0.0.201 | 65201 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
 | 10.0.0.202 | 65201 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
+| 10.0.0.203 | 65202 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
+| 10.0.0.204 | 65202 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
 | 10.0.0.205 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
 | 10.0.0.206 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
 | 172.20.3.35 | 65201 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 | 172.20.3.39 | 65201 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
+| 172.20.3.43 | 65202 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
+| 172.20.3.47 | 65202 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 | 172.20.3.51 | 65203 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 | 172.20.3.55 | 65203 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 
@@ -454,6 +474,12 @@ router bgp 65200
    neighbor 10.0.0.202 peer group EVPN-OVERLAY-LOCAL-PEERS
    neighbor 10.0.0.202 remote-as 65201
    neighbor 10.0.0.202 description s2-leaf2
+   neighbor 10.0.0.203 peer group EVPN-OVERLAY-LOCAL-PEERS
+   neighbor 10.0.0.203 remote-as 65202
+   neighbor 10.0.0.203 description s2-leaf3
+   neighbor 10.0.0.204 peer group EVPN-OVERLAY-LOCAL-PEERS
+   neighbor 10.0.0.204 remote-as 65202
+   neighbor 10.0.0.204 description s2-leaf4
    neighbor 10.0.0.205 peer group EVPN-OVERLAY-LOCAL-PEERS
    neighbor 10.0.0.205 remote-as 65203
    neighbor 10.0.0.205 description s2-brdr1
@@ -466,6 +492,12 @@ router bgp 65200
    neighbor 172.20.3.39 peer group IPV4-UNDERLAY-PEERS
    neighbor 172.20.3.39 remote-as 65201
    neighbor 172.20.3.39 description s2-leaf2_Ethernet3
+   neighbor 172.20.3.43 peer group IPV4-UNDERLAY-PEERS
+   neighbor 172.20.3.43 remote-as 65202
+   neighbor 172.20.3.43 description s2-leaf3_Ethernet3
+   neighbor 172.20.3.47 peer group IPV4-UNDERLAY-PEERS
+   neighbor 172.20.3.47 remote-as 65202
+   neighbor 172.20.3.47 description s2-leaf4_Ethernet3
    neighbor 172.20.3.51 peer group IPV4-UNDERLAY-PEERS
    neighbor 172.20.3.51 remote-as 65203
    neighbor 172.20.3.51 description s2-brdr1_Ethernet3
