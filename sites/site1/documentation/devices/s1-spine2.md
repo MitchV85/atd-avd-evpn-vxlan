@@ -388,7 +388,7 @@ Global ARP timeout: 1500
 
 | BGP AS | Router ID |
 | ------ | --------- |
-| 65000|  10.0.0.2 |
+| 65100|  10.0.0.2 |
 
 | BGP Tuning |
 | ---------- |
@@ -449,7 +449,7 @@ Global ARP timeout: 1500
 
 ```eos
 !
-router bgp 65000
+router bgp 65100
    router-id 10.0.0.2
    distance bgp 20 200 200
    graceful-restart restart-time 300

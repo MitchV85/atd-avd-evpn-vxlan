@@ -656,10 +656,10 @@ Global ARP timeout: 1500
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
-| 10.0.0.1 | 65000 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
-| 10.0.0.2 | 65000 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
-| 172.20.1.156 | 65000 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
-| 172.20.1.158 | 65000 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
+| 10.0.0.1 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
+| 10.0.0.2 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
+| 172.20.1.156 | 65100 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
+| 172.20.1.158 | 65100 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 | 192.1.1.0 | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | - | - | - | - | - |
 | 192.2.2.0 | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | A | - | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | - | - | - | - | - |
 
@@ -717,16 +717,16 @@ router bgp 65102
    neighbor MLAG-IPV4-UNDERLAY-PEER maximum-routes 12000
    neighbor MLAG-IPV4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 10.0.0.1 peer group EVPN-OVERLAY-LOCAL-PEERS
-   neighbor 10.0.0.1 remote-as 65000
+   neighbor 10.0.0.1 remote-as 65100
    neighbor 10.0.0.1 description s1-spine1
    neighbor 10.0.0.2 peer group EVPN-OVERLAY-LOCAL-PEERS
-   neighbor 10.0.0.2 remote-as 65000
+   neighbor 10.0.0.2 remote-as 65100
    neighbor 10.0.0.2 description s1-spine2
    neighbor 172.20.1.156 peer group IPV4-UNDERLAY-PEERS
-   neighbor 172.20.1.156 remote-as 65000
+   neighbor 172.20.1.156 remote-as 65100
    neighbor 172.20.1.156 description s1-spine1_Ethernet5
    neighbor 172.20.1.158 peer group IPV4-UNDERLAY-PEERS
-   neighbor 172.20.1.158 remote-as 65000
+   neighbor 172.20.1.158 remote-as 65100
    neighbor 172.20.1.158 description s1-spine2_Ethernet5
    neighbor 192.1.1.0 peer group MLAG-IPV4-UNDERLAY-PEER
    neighbor 192.1.1.0 description s1-leaf3

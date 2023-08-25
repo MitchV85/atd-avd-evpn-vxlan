@@ -668,14 +668,14 @@ Global ARP timeout: 1500
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
-| 10.0.0.1 | 65000 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
-| 10.0.0.2 | 65000 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
+| 10.0.0.1 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
+| 10.0.0.2 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
 | 10.1.0.102 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | - | - |
 | 10.1.0.104 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | - | - |
 | 172.16.255.5 | 65000 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 | 172.16.255.7 | 65000 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
-| 172.20.1.164 | 65000 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
-| 172.20.1.166 | 65000 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
+| 172.20.1.164 | 65100 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
+| 172.20.1.166 | 65100 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 | 192.1.1.0 | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | - | - | - | - | - |
 | 192.2.2.0 | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | A | - | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | Inherited from peer group MLAG-IPV4-UNDERLAY-PEER | - | - | - | - | - |
 
@@ -747,10 +747,10 @@ router bgp 65103
    neighbor MLAG-IPV4-UNDERLAY-PEER maximum-routes 12000
    neighbor MLAG-IPV4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 10.0.0.1 peer group EVPN-OVERLAY-LOCAL-PEERS
-   neighbor 10.0.0.1 remote-as 65000
+   neighbor 10.0.0.1 remote-as 65100
    neighbor 10.0.0.1 description s1-spine1
    neighbor 10.0.0.2 peer group EVPN-OVERLAY-LOCAL-PEERS
-   neighbor 10.0.0.2 remote-as 65000
+   neighbor 10.0.0.2 remote-as 65100
    neighbor 10.0.0.2 description s1-spine2
    neighbor 10.1.0.102 peer group EVPN-OVERLAY-REMOTE-PEERS
    neighbor 10.1.0.102 remote-as 65203
@@ -761,14 +761,16 @@ router bgp 65103
    neighbor 172.16.255.5 peer group IPV4-UNDERLAY-PEERS
    neighbor 172.16.255.5 remote-as 65000
    neighbor 172.16.255.5 description s1-core1 VRF Default
+   neighbor 172.16.255.5 route-map RM-WAN-OUT out
    neighbor 172.16.255.7 peer group IPV4-UNDERLAY-PEERS
    neighbor 172.16.255.7 remote-as 65000
    neighbor 172.16.255.7 description s1-core2 VRF Default
+   neighbor 172.16.255.7 route-map RM-WAN-OUT out
    neighbor 172.20.1.164 peer group IPV4-UNDERLAY-PEERS
-   neighbor 172.20.1.164 remote-as 65000
+   neighbor 172.20.1.164 remote-as 65100
    neighbor 172.20.1.164 description s1-spine1_Ethernet8
    neighbor 172.20.1.166 peer group IPV4-UNDERLAY-PEERS
-   neighbor 172.20.1.166 remote-as 65000
+   neighbor 172.20.1.166 remote-as 65100
    neighbor 172.20.1.166 description s1-spine2_Ethernet8
    neighbor 192.1.1.0 peer group MLAG-IPV4-UNDERLAY-PEER
    neighbor 192.1.1.0 description s1-brdr1
@@ -855,6 +857,14 @@ router bfd
 | 10 | permit 10.0.0.0/24 eq 32 |
 | 20 | permit 10.1.1.0/24 eq 32 |
 
+##### PL-SITE1-GW-LOOPS
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | permit 10.0.0.105/32 |
+| 20 | permit 10.0.0.106/32 |
+| 30 | permit 10.1.1.105/32 |
+
 #### Prefix-lists Device Configuration
 
 ```eos
@@ -862,6 +872,11 @@ router bfd
 ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
    seq 10 permit 10.0.0.0/24 eq 32
    seq 20 permit 10.1.1.0/24 eq 32
+!
+ip prefix-list PL-SITE1-GW-LOOPS
+   seq 10 permit 10.0.0.105/32
+   seq 20 permit 10.0.0.106/32
+   seq 30 permit 10.1.1.105/32
 ```
 
 ### Route-maps
@@ -880,6 +895,12 @@ ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
 | -------- | ---- | ----- | --- | ------------- | -------- |
 | 10 | permit | - | origin incomplete | - | - |
 
+##### RM-WAN-OUT
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | permit | ip address prefix-list PL-SITE1-GW-LOOPS | - | - | - |
+
 #### Route-maps Device Configuration
 
 ```eos
@@ -890,6 +911,10 @@ route-map RM-CONN-2-BGP permit 10
 route-map RM-MLAG-PEER-IN permit 10
    description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
    set origin incomplete
+!
+route-map RM-WAN-OUT permit 10
+   description Only advertise the EVPN GW Loopbacks
+   match ip address prefix-list PL-SITE1-GW-LOOPS
 ```
 
 ## VRF Instances

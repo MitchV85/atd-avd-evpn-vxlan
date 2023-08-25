@@ -1,6 +1,6 @@
 hostname: s1-spine1
 router_bgp:
-  as: '65000'
+  as: '65100'
   router_id: 10.0.0.1
   distance:
     external_routes: 20
@@ -18,14 +18,14 @@ router_bgp:
   peer_groups:
   - name: IPV4-UNDERLAY-PEERS
     type: ipv4
-    password: X/OrLne2MxtUwJOXyoEcEw==
+    password: Z2jq9TIjUWPAqnO+1XFZIw==
     maximum_routes: 12000
     send_community: all
   - name: EVPN-OVERLAY-LOCAL-PEERS
     type: evpn
     update_source: Loopback0
     bfd: true
-    password: HwsUtvRBaFIOmUOBhrtIfQ==
+    password: HeaxjG3Gq3lrbAtR9/Ht0w==
     send_community: all
     maximum_routes: 0
     ebgp_multihop: 3
@@ -109,7 +109,7 @@ local_users:
 - name: arista
   privilege: 15
   role: network-admin
-  sha512_password: $6$workshop$WyHM2zwB8z56Iztx0lLXOzQRxSdfdvjvVkr7/IX0g6CUvOEBrXGO7xIo5QJllsWWajhzCM9RBGWWw.03vcfvt1
+  sha512_password: $6$workshop$jOI73Gwe1cjT1B/BP4iYhedVj1WHzZorR2aSprw6sBDXkjq/fLj17tDpD6SROY43ni/L3O5tlo/UaKfCkQjB6/
 vrfs:
 - name: default
   ip_routing: false

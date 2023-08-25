@@ -42,7 +42,7 @@ bgp_peer_groups:
 spine:
   defaults:
     platform: ceos
-    bgp_as: 65000
+    bgp_as: 65100
     loopback_ipv4_pool: 10.0.0.0/24
   nodes:
     - name: s1-spine1
@@ -93,6 +93,24 @@ l3leaf:
         - hostname: s2-brdr2
           ip_address: 10.1.0.104
           bgp_as: 65203
+      structured_config:
+        prefix_lists:
+          - name: PL-SITE1-GW-LOOPS
+            sequence_numbers:
+            - sequence: 10
+              action: permit 10.0.0.105/32
+            - sequence: 20
+              action: permit 10.0.0.106/32
+            - sequence: 30
+              action: permit 10.1.1.105/32
+        route_maps:
+          - name: RM-WAN-OUT
+            sequence_numbers:
+              - sequence: 10
+                type: permit
+                description: Only advertise the EVPN GW Loopbacks
+                match:
+                  - "ip address prefix-list PL-SITE1-GW-LOOPS"
       nodes:
         - name: s1-brdr1
           id: 105
@@ -107,10 +125,12 @@ l3leaf:
                   remote_as: 65000
                   description: s1-core1 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
+                  route_map_out: RM-WAN-OUT
                 172.16.255.3:
                   remote_as: 65000
                   description: s1-core2 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
+                  route_map_out: RM-WAN-OUT
         - name: s1-brdr2
           id: 106
           mgmt_ip: 192.168.0.101/24
@@ -124,10 +144,12 @@ l3leaf:
                   remote_as: 65000
                   description: s1-core1 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
+                  route_map_out: RM-WAN-OUT
                 172.16.255.7:
                   remote_as: 65000
                   description: s1-core2 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
+                  route_map_out: RM-WAN-OUT
 
     ####################################################
     # DC1 Leaf Pair 1                                  #
