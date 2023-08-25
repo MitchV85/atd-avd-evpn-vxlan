@@ -22,3 +22,10 @@ deploy-site-1: ## Deploy Configs via eAPI
 cvp-site-1: ## Deploy Configs via eAPI
 	ansible-playbook playbooks/cvp1.yml -i sites/site1/inventory.yml
 
+########################################################
+# WAN & Hosts - Lab Prep
+########################################################
+
+.PHONY: preplab
+preplab: ## Deploy Configs via eAPI
+	ansible-playbook playbooks/preplab.yml -i extra_configs/inventory.yml -e "target_hosts=LAB"
