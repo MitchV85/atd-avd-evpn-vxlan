@@ -88,10 +88,10 @@ l3leaf:
           enabled: true
         remote_peers:
         - hostname: s2-brdr1
-          ip_address: 10.1.0.102
+          ip_address: 10.0.0.205
           bgp_as: 65203
         - hostname: s2-brdr2
-          ip_address: 10.1.0.104
+          ip_address: 10.0.0.206
           bgp_as: 65203
       structured_config:
         prefix_lists:

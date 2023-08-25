@@ -19,6 +19,22 @@ cvp-site-1: ## Deploy Configs via eAPI
 	ansible-playbook playbooks/cvp1.yml -i sites/site1/inventory.yml
 
 ########################################################
+# Site 2
+########################################################
+
+.PHONY: build-site-2
+build-site-2: ## Build Configs
+	ansible-playbook playbooks/build.yml -i sites/site2/inventory.yml -e "target_hosts=SITE2_FABRIC"
+
+.PHONY: deploy-site-2
+deploy-site-2: ## Deploy Configs via eAPI
+	ansible-playbook playbooks/deploy.yml -i sites/site2/inventory.yml -e "target_hosts=SITE2_FABRIC"
+
+.PHONY: cvp-site-2
+cvp-site-2: ## Deploy Configs via eAPI
+	ansible-playbook playbooks/cvp1.yml -i sites/site2/inventory.yml
+
+########################################################
 # WAN & Hosts - Lab Prep
 ########################################################
 

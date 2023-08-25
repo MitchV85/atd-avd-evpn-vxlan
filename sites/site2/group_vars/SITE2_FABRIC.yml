@@ -1,27 +1,40 @@
 ---
 
-fabric_name: dc2_fabric
+fabric_name: SITE2_FABRIC
 
-underlay_routing_protocol: EBGP
-overlay_routing_protocol: EBGP
+underlay_routing_protocol: ebgp
+overlay_routing_protocol: ebgp
 
 p2p_uplinks_mtu: 9214
 
 evpn_import_pruning: true
 
+fabric_ip_addressing:
+  mlag:
+    algorithm: same_subnet
+
+bgp_distance:
+  external_routes: 20
+  internal_routes: 200
+  local_routes: 200
+
+bgp_graceful_restart:
+  enabled: true
+  restart_time: 300
+
 bgp_peer_groups:
   ipv4_underlay_peers:
     name: IPV4-UNDERLAY-PEERS
-    password: X/OrLne2MxtUwJOXyoEcEw==
+    password: Z2jq9TIjUWPAqnO+1XFZIw==
   mlag_ipv4_underlay_peer:
     name: MLAG-IPV4-UNDERLAY-PEER
-    password: 96Yo/G3L+2RCoAD4Cy/2Ew==
+    password: ADxOpgx5ZlhiYi15YOWc6A==
   evpn_overlay_peers:
     name: EVPN-OVERLAY-LOCAL-PEERS
-    password: HwsUtvRBaFIOmUOBhrtIfQ==
+    password: HeaxjG3Gq3lrbAtR9/Ht0w==
   evpn_overlay_core:
     name: EVPN-OVERLAY-REMOTE-PEERS
-    password: N5U6i+3vPyc1DrMdKl+ljQ==
+    password: O7bVgHeWQwhkxjiX+7oVLg==
 
 ##################################################
 # DC2 Spines                                     #
@@ -29,20 +42,14 @@ bgp_peer_groups:
 spine:
   defaults:
     platform: ceos
-    bgp_as: 65100
-    loopback_ipv4_pool: 10.1.0.0/24
-    bgp_defaults:
-      - 'no bgp default ipv4-unicast'
-      - 'distance bgp 20 200 200'
-      - 'neighbor default send-community'
-      - 'graceful-restart restart-time 300'
-      - 'graceful-restart'
+    bgp_as: 65200
+    loopback_ipv4_pool: 10.0.0.0/24
   nodes:
     - name: s2-spine1
-      id: 110
+      id: 1
       mgmt_ip: 192.168.0.20/24
     - name: s2-spine2
-      id: 112
+      id: 2
       mgmt_ip: 192.168.0.21/24
 
 ##################################################
@@ -51,23 +58,17 @@ spine:
 l3leaf:
   defaults:
     platform: ceos
-    loopback_ipv4_pool: 10.1.0.0/24
+    loopback_ipv4_pool: 10.0.0.0/24
     vtep_loopback_ipv4_pool: 10.1.1.0/24
     uplink_interfaces: [Ethernet2, Ethernet3]
     uplink_switches: [s2-spine1, s2-spine2]
-    uplink_ipv4_pool: 10.255.0.0/22
+    uplink_ipv4_pool: 172.20.0.0/22
     mlag_interfaces: [Ethernet1, Ethernet6]
-    mlag_peer_ipv4_pool: 192.0.0.0/24
-    mlag_peer_l3_ipv4_pool: 192.1.1.0/24
+    mlag_peer_ipv4_pool: 192.0.0.0/31
+    mlag_peer_l3_ipv4_pool: 192.1.1.0/31
     mlag_port_channel_id: 1000
     virtual_router_mac_address: 00:1c:73:00:00:01
-    bgp_defaults:
-      - 'no bgp default ipv4-unicast'
-      - 'distance bgp 20 200 200'
-      - 'neighbor default send-community'
-      - 'graceful-restart restart-time 300'
-      - 'graceful-restart'
-    spanning_tree_mode: rapid-pvst
+    spanning_tree_mode: mstp
     spanning_tree_priority: 0
     structured_config:
       spanning_tree:
@@ -77,32 +78,42 @@ l3leaf:
     ####################################################
     # DC2 Border Leafs                                 #
     ####################################################
-    - group: BrdrLeafs
+    - group: BORDER_LEAFS
       platform: ceos
-      structured_config:
-        router_bgp:
-          address_family_ipv4:
-            networks:
-              10.231.0.2/32:
-              10.231.0.4/32:
-              10.231.1.2/32:
       filter:
-        tenants: [ATD_DC]
-        tags: ['DC']
-      bgp_as: 65199
+        tenants: ['LAB']
+      bgp_as: 65203
       evpn_gateway:
         evpn_l2:
           enabled: true
         remote_peers:
         - hostname: s1-brdr1
-          ip_address: 10.1.0.2
-          bgp_as: 65099
+          ip_address: 10.0.0.105
+          bgp_as: 65103
         - hostname: s1-brdr2
-          ip_address: 10.1.0.4
-          bgp_as: 65099
+          ip_address: 10.0.0.106
+          bgp_as: 65103
+      structured_config:
+        prefix_lists:
+          - name: PL-SITE2-GW-LOOPS
+            sequence_numbers:
+            - sequence: 10
+              action: permit 10.0.0.205/32
+            - sequence: 20
+              action: permit 10.0.0.206/32
+            - sequence: 30
+              action: permit 10.1.1.205/32
+        route_maps:
+          - name: RM-WAN-OUT
+            sequence_numbers:
+              - sequence: 10
+                type: permit
+                description: Only advertise the EVPN GW Loopbacks
+                match:
+                  - "ip address prefix-list PL-SITE2-GW-LOOPS"
       nodes:
         - name: s2-brdr1
-          id: 102
+          id: 205
           mgmt_ip: 192.168.0.200/24
           uplink_switch_interfaces: [Ethernet7, Ethernet7]
           uplink_interfaces: [Ethernet2, Ethernet3]
@@ -111,15 +122,17 @@ l3leaf:
             router_bgp:
               neighbors:
                 172.16.255.129:
-                  remote_as: 65502
+                  remote_as: 65000
                   description: s2-core1 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
+                  route_map_out: RM-WAN-OUT
                 172.16.255.131:
-                  remote_as: 65502
+                  remote_as: 65000
                   description: s2-core2 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
+                  route_map_out: RM-WAN-OUT
         - name: s2-brdr2
-          id: 104
+          id: 206
           mgmt_ip: 192.168.0.201/24
           uplink_switch_interfaces: [Ethernet8, Ethernet8]
           uplink_interfaces: [Ethernet2, Ethernet3]
@@ -128,31 +141,49 @@ l3leaf:
             router_bgp:
               neighbors:
                 172.16.255.133:
-                  remote_as: 65502
+                  remote_as: 65000
                   description: s2-core1 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
+                  route_map_out: RM-WAN-OUT
                 172.16.255.135:
-                  remote_as: 65502
+                  remote_as: 65000
                   description: s2-core2 VRF Default
                   peer_group: IPV4-UNDERLAY-PEERS
+                  route_map_out: RM-WAN-OUT
 
     ####################################################
     # DC2 Leaf Pair 1                                  #
     ####################################################
     - group: LeafPair1
       filter:
-        tenants: [ATD_DC]
-        tags: ['DC']
-      bgp_as: 65101
+        tenants: ['LAB']
+      bgp_as: 65201
       nodes:
         - name: s2-leaf1
-          id: 114
+          id: 201
           mgmt_ip: 192.168.0.22/24
           uplink_switch_interfaces: [Ethernet2, Ethernet2]
         - name: s2-leaf2
-          id: 116
+          id: 202
           mgmt_ip: 192.168.0.23/24
           uplink_switch_interfaces: [Ethernet3, Ethernet3]
+
+    ####################################################
+    # DC2 Leaf Pair 2                                  #
+    ####################################################
+    - group: LeafPair2
+      filter:
+        tenants: ['LAB']
+      bgp_as: 65202
+      nodes:
+        - name: s2-leaf3
+          id: 203
+          mgmt_ip: 192.168.0.24/24
+          uplink_switch_interfaces: [Ethernet4, Ethernet4]
+        - name: s2-leaf4
+          id: 204
+          mgmt_ip: 192.168.0.25/24
+          uplink_switch_interfaces: [Ethernet5, Ethernet5]
 
 ####################################################
 # External Fabric PtP L3 Conncectivity             #
