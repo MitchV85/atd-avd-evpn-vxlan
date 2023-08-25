@@ -63,7 +63,7 @@
 
 | Management Interface | description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management0 | oob_management | oob | default | 192.168.0.13/24 | 192.168.0.1 |
+| Management0 | oob_management | oob | default | 192.168.0.15/24 | 192.168.0.1 |
 
 ##### IPv6
 
@@ -78,7 +78,7 @@
 interface Management0
    description oob_management
    no shutdown
-   ip address 192.168.0.13/24
+   ip address 192.168.0.15/24
 ```
 
 ### DNS Domain

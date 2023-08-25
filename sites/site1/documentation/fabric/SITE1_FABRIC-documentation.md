@@ -21,8 +21,8 @@
 | SITE1_FABRIC | l3leaf | s1-brdr2 | 192.168.0.101/24 | ceos | Provisioned | - |
 | SITE1_FABRIC | l3leaf | s1-leaf1 | 192.168.0.12/24 | ceos | Provisioned | - |
 | SITE1_FABRIC | l3leaf | s1-leaf2 | 192.168.0.13/24 | ceos | Provisioned | - |
-| SITE1_FABRIC | l3leaf | s1-leaf3 | 192.168.0.12/24 | ceos | Provisioned | - |
-| SITE1_FABRIC | l3leaf | s1-leaf4 | 192.168.0.13/24 | ceos | Provisioned | - |
+| SITE1_FABRIC | l3leaf | s1-leaf3 | 192.168.0.14/24 | ceos | Provisioned | - |
+| SITE1_FABRIC | l3leaf | s1-leaf4 | 192.168.0.15/24 | ceos | Provisioned | - |
 | SITE1_FABRIC | spine | s1-spine1 | 192.168.0.10/24 | ceos | Provisioned | - |
 | SITE1_FABRIC | spine | s1-spine2 | 192.168.0.11/24 | ceos | Provisioned | - |
 
