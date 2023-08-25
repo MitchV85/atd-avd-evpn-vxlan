@@ -76,11 +76,11 @@ router_bgp:
     peer_group: EVPN-OVERLAY-LOCAL-PEERS
     description: s1-spine2
     remote_as: '65100'
-  - ip_address: 10.1.0.102
+  - ip_address: 10.0.0.205
     peer_group: EVPN-OVERLAY-REMOTE-PEERS
     description: s2-brdr1
     remote_as: '65203'
-  - ip_address: 10.1.0.104
+  - ip_address: 10.0.0.206
     peer_group: EVPN-OVERLAY-REMOTE-PEERS
     description: s2-brdr2
     remote_as: '65203'

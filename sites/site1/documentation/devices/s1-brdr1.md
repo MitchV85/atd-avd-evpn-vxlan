@@ -670,8 +670,8 @@ Global ARP timeout: 1500
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
 | 10.0.0.1 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
 | 10.0.0.2 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | Inherited from peer group EVPN-OVERLAY-LOCAL-PEERS | - | - | - |
-| 10.1.0.102 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | - | - |
-| 10.1.0.104 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | - | - |
+| 10.0.0.205 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | - | - |
+| 10.0.0.206 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | Inherited from peer group EVPN-OVERLAY-REMOTE-PEERS | - | - | - |
 | 172.16.255.1 | 65000 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 | 172.16.255.3 | 65000 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
 | 172.20.1.160 | 65100 | default | - | Inherited from peer group IPV4-UNDERLAY-PEERS | Inherited from peer group IPV4-UNDERLAY-PEERS | - | - | - | - | - |
@@ -752,12 +752,12 @@ router bgp 65103
    neighbor 10.0.0.2 peer group EVPN-OVERLAY-LOCAL-PEERS
    neighbor 10.0.0.2 remote-as 65100
    neighbor 10.0.0.2 description s1-spine2
-   neighbor 10.1.0.102 peer group EVPN-OVERLAY-REMOTE-PEERS
-   neighbor 10.1.0.102 remote-as 65203
-   neighbor 10.1.0.102 description s2-brdr1
-   neighbor 10.1.0.104 peer group EVPN-OVERLAY-REMOTE-PEERS
-   neighbor 10.1.0.104 remote-as 65203
-   neighbor 10.1.0.104 description s2-brdr2
+   neighbor 10.0.0.205 peer group EVPN-OVERLAY-REMOTE-PEERS
+   neighbor 10.0.0.205 remote-as 65203
+   neighbor 10.0.0.205 description s2-brdr1
+   neighbor 10.0.0.206 peer group EVPN-OVERLAY-REMOTE-PEERS
+   neighbor 10.0.0.206 remote-as 65203
+   neighbor 10.0.0.206 description s2-brdr2
    neighbor 172.16.255.1 peer group IPV4-UNDERLAY-PEERS
    neighbor 172.16.255.1 remote-as 65000
    neighbor 172.16.255.1 description s1-core1 VRF Default
