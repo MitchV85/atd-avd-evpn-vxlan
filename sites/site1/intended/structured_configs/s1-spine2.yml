@@ -1,0 +1,172 @@
+hostname: s1-spine2
+router_bgp:
+  as: '65100'
+  router_id: 10.0.0.2
+  distance:
+    external_routes: 20
+    internal_routes: 200
+    local_routes: 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  graceful_restart:
+    enabled: true
+    restart_time: 300
+  peer_groups:
+  - name: IPV4-UNDERLAY-PEERS
+    type: ipv4
+    password: Z2jq9TIjUWPAqnO+1XFZIw==
+    maximum_routes: 12000
+    send_community: all
+  - name: EVPN-OVERLAY-LOCAL-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    password: HeaxjG3Gq3lrbAtR9/Ht0w==
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+    next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPV4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-LOCAL-PEERS
+      activate: false
+  redistribute_routes:
+  - source_protocol: connected
+    route_map: RM-CONN-2-BGP
+  neighbors:
+  - ip_address: 172.20.1.147
+    peer_group: IPV4-UNDERLAY-PEERS
+    remote_as: '65101'
+    description: s1-leaf1_Ethernet3
+  - ip_address: 172.20.1.151
+    peer_group: IPV4-UNDERLAY-PEERS
+    remote_as: '65101'
+    description: s1-leaf2_Ethernet3
+  - ip_address: 172.20.1.163
+    peer_group: IPV4-UNDERLAY-PEERS
+    remote_as: '65103'
+    description: s1-brdr1_Ethernet3
+  - ip_address: 172.20.1.167
+    peer_group: IPV4-UNDERLAY-PEERS
+    remote_as: '65103'
+    description: s1-brdr2_Ethernet3
+  - ip_address: 10.0.0.105
+    peer_group: EVPN-OVERLAY-LOCAL-PEERS
+    description: s1-brdr1
+    remote_as: '65103'
+  - ip_address: 10.0.0.106
+    peer_group: EVPN-OVERLAY-LOCAL-PEERS
+    description: s1-brdr2
+    remote_as: '65103'
+  - ip_address: 10.0.0.101
+    peer_group: EVPN-OVERLAY-LOCAL-PEERS
+    description: s1-leaf1
+    remote_as: '65101'
+  - ip_address: 10.0.0.102
+    peer_group: EVPN-OVERLAY-LOCAL-PEERS
+    description: s1-leaf2
+    remote_as: '65101'
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-LOCAL-PEERS
+      activate: true
+static_routes:
+- vrf: default
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+spanning_tree:
+  mode: none
+local_users:
+- name: arista
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$workshop$NxXz8.pajjvgAoUOuC7FKF0JVqJg2FR8t2NTfqHcmWtSqgJBVusBHiw8v4uqSSduF7qMNYizRBPctLyMR.XBj1
+vrfs:
+- name: default
+  ip_routing: false
+management_interfaces:
+- name: Management0
+  description: oob_management
+  shutdown: false
+  vrf: default
+  ip_address: 192.168.0.11/24
+  gateway: 192.168.0.1
+  type: oob
+mac_address_table:
+  aging_time: 1800
+management_api_http:
+  enable_vrfs:
+  - name: default
+  enable_https: true
+ethernet_interfaces:
+- name: Ethernet2
+  peer: s1-leaf1
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  description: P2P_LINK_TO_S1-LEAF1_Ethernet3
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 172.20.1.146/31
+- name: Ethernet3
+  peer: s1-leaf2
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  description: P2P_LINK_TO_S1-LEAF2_Ethernet3
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 172.20.1.150/31
+- name: Ethernet7
+  peer: s1-brdr1
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  description: P2P_LINK_TO_S1-BRDR1_Ethernet3
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 172.20.1.162/31
+- name: Ethernet8
+  peer: s1-brdr2
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  description: P2P_LINK_TO_S1-BRDR2_Ethernet3
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 172.20.1.166/31
+loopback_interfaces:
+- name: Loopback0
+  description: EVPN_Overlay_Peering
+  shutdown: false
+  ip_address: 10.0.0.2/32
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.0.0.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
