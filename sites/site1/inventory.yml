@@ -4,7 +4,7 @@ SITE1:
     CVP:
       hosts:
         cvp:
-          ansible_host: mitchlabs-1-1afcb45a-eos.topo.testdrive.arista.com
+          ansible_host: mitchlabs-2-1afcb45a-eos.topo.testdrive.arista.com
     SITE1_FABRIC:
       children:
         SITE1_SPINES:
