@@ -18,11 +18,11 @@ tenants:
             mtu: 9014
             ip_address_virtual: 10.10.10.1/24
             evpn_l2_multi_domain: true
-          20:
-            name: Twenty
-            description: Twenty
-            tags: ['Dev']
-            enabled: true
-            mtu: 9014
-            ip_address_virtual: 10.20.20.1/24
-            evpn_l2_multi_domain: true
+          # 20:
+          #   name: Twenty
+          #   description: Twenty
+          #   tags: ['Dev']
+          #   enabled: true
+          #   mtu: 9014
+          #   ip_address_virtual: 10.20.20.1/24
+          #   evpn_l2_multi_domain: true
