@@ -25,3 +25,4 @@ tenants:
             enabled: true
             mtu: 9014
             ip_address_virtual: 10.20.20.1/24
+            evpn_l2_multi_domain: true
