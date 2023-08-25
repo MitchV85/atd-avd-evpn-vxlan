@@ -8,7 +8,7 @@ cvp_configlets:
     Management0\n!\nspanning-tree mode mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree
     edge-port bpduguard default\nspanning-tree mst 0 priority 0\n!\naaa authorization
     exec default local\n!\nno enable password\nno aaa root\n!\nusername arista privilege
-    15 role network-admin secret sha512 $6$workshop$eP9ah1.lz/PavUqYDMFs0uUuKRl5qk57r/xmwhx8q4oLl2x/nC7.H4dBTHnBibYoaUGxLdJxVkNIRHUVPSPwu.\n!\nvlan
+    15 role network-admin secret sha512 $6$workshop$NxXz8.pajjvgAoUOuC7FKF0JVqJg2FR8t2NTfqHcmWtSqgJBVusBHiw8v4uqSSduF7qMNYizRBPctLyMR.XBj1\n!\nvlan
     10\n   name Ten\n!\nvlan 20\n   name Twenty\n!\nvlan 3001\n   name MLAG_iBGP_A\n
     \  trunk group LEAF_PEER_L3\n!\nvlan 4093\n   name LEAF_PEER_L3\n   trunk group
     LEAF_PEER_L3\n!\nvlan 4094\n   name MLAG_PEER\n   trunk group MLAG\n!\nvrf instance
@@ -113,7 +113,7 @@ cvp_configlets:
     Management0\n!\nspanning-tree mode mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree
     edge-port bpduguard default\nspanning-tree mst 0 priority 0\n!\naaa authorization
     exec default local\n!\nno enable password\nno aaa root\n!\nusername arista privilege
-    15 role network-admin secret sha512 $6$workshop$eP9ah1.lz/PavUqYDMFs0uUuKRl5qk57r/xmwhx8q4oLl2x/nC7.H4dBTHnBibYoaUGxLdJxVkNIRHUVPSPwu.\n!\nvlan
+    15 role network-admin secret sha512 $6$workshop$NxXz8.pajjvgAoUOuC7FKF0JVqJg2FR8t2NTfqHcmWtSqgJBVusBHiw8v4uqSSduF7qMNYizRBPctLyMR.XBj1\n!\nvlan
     10\n   name Ten\n!\nvlan 20\n   name Twenty\n!\nvlan 3001\n   name MLAG_iBGP_A\n
     \  trunk group LEAF_PEER_L3\n!\nvlan 4093\n   name LEAF_PEER_L3\n   trunk group
     LEAF_PEER_L3\n!\nvlan 4094\n   name MLAG_PEER\n   trunk group MLAG\n!\nvrf instance
@@ -218,7 +218,7 @@ cvp_configlets:
     Management0\n!\nspanning-tree mode mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree
     edge-port bpduguard default\nspanning-tree mst 0 priority 0\n!\naaa authorization
     exec default local\n!\nno enable password\nno aaa root\n!\nusername arista privilege
-    15 role network-admin secret sha512 $6$workshop$eP9ah1.lz/PavUqYDMFs0uUuKRl5qk57r/xmwhx8q4oLl2x/nC7.H4dBTHnBibYoaUGxLdJxVkNIRHUVPSPwu.\n!\nvlan
+    15 role network-admin secret sha512 $6$workshop$NxXz8.pajjvgAoUOuC7FKF0JVqJg2FR8t2NTfqHcmWtSqgJBVusBHiw8v4uqSSduF7qMNYizRBPctLyMR.XBj1\n!\nvlan
     10\n   name Ten\n!\nvlan 20\n   name Twenty\n!\nvlan 3001\n   name MLAG_iBGP_A\n
     \  trunk group LEAF_PEER_L3\n!\nvlan 4093\n   name LEAF_PEER_L3\n   trunk group
     LEAF_PEER_L3\n!\nvlan 4094\n   name MLAG_PEER\n   trunk group MLAG\n!\nvrf instance
@@ -301,7 +301,7 @@ cvp_configlets:
     Management0\n!\nspanning-tree mode mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree
     edge-port bpduguard default\nspanning-tree mst 0 priority 0\n!\naaa authorization
     exec default local\n!\nno enable password\nno aaa root\n!\nusername arista privilege
-    15 role network-admin secret sha512 $6$workshop$eP9ah1.lz/PavUqYDMFs0uUuKRl5qk57r/xmwhx8q4oLl2x/nC7.H4dBTHnBibYoaUGxLdJxVkNIRHUVPSPwu.\n!\nvlan
+    15 role network-admin secret sha512 $6$workshop$NxXz8.pajjvgAoUOuC7FKF0JVqJg2FR8t2NTfqHcmWtSqgJBVusBHiw8v4uqSSduF7qMNYizRBPctLyMR.XBj1\n!\nvlan
     10\n   name Ten\n!\nvlan 20\n   name Twenty\n!\nvlan 3001\n   name MLAG_iBGP_A\n
     \  trunk group LEAF_PEER_L3\n!\nvlan 4093\n   name LEAF_PEER_L3\n   trunk group
     LEAF_PEER_L3\n!\nvlan 4094\n   name MLAG_PEER\n   trunk group MLAG\n!\nvrf instance
@@ -384,7 +384,7 @@ cvp_configlets:
     Management0\n!\nspanning-tree mode mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree
     edge-port bpduguard default\nspanning-tree mst 0 priority 0\n!\naaa authorization
     exec default local\n!\nno enable password\nno aaa root\n!\nusername arista privilege
-    15 role network-admin secret sha512 $6$workshop$eP9ah1.lz/PavUqYDMFs0uUuKRl5qk57r/xmwhx8q4oLl2x/nC7.H4dBTHnBibYoaUGxLdJxVkNIRHUVPSPwu.\n!\nvlan
+    15 role network-admin secret sha512 $6$workshop$NxXz8.pajjvgAoUOuC7FKF0JVqJg2FR8t2NTfqHcmWtSqgJBVusBHiw8v4uqSSduF7qMNYizRBPctLyMR.XBj1\n!\nvlan
     10\n   name Ten\n!\nvlan 20\n   name Twenty\n!\nvlan 3001\n   name MLAG_iBGP_A\n
     \  trunk group LEAF_PEER_L3\n!\nvlan 4093\n   name LEAF_PEER_L3\n   trunk group
     LEAF_PEER_L3\n!\nvlan 4094\n   name MLAG_PEER\n   trunk group MLAG\n!\nvrf instance
@@ -467,7 +467,7 @@ cvp_configlets:
     Management0\n!\nspanning-tree mode mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree
     edge-port bpduguard default\nspanning-tree mst 0 priority 0\n!\naaa authorization
     exec default local\n!\nno enable password\nno aaa root\n!\nusername arista privilege
-    15 role network-admin secret sha512 $6$workshop$eP9ah1.lz/PavUqYDMFs0uUuKRl5qk57r/xmwhx8q4oLl2x/nC7.H4dBTHnBibYoaUGxLdJxVkNIRHUVPSPwu.\n!\nvlan
+    15 role network-admin secret sha512 $6$workshop$NxXz8.pajjvgAoUOuC7FKF0JVqJg2FR8t2NTfqHcmWtSqgJBVusBHiw8v4uqSSduF7qMNYizRBPctLyMR.XBj1\n!\nvlan
     10\n   name Ten\n!\nvlan 20\n   name Twenty\n!\nvlan 3001\n   name MLAG_iBGP_A\n
     \  trunk group LEAF_PEER_L3\n!\nvlan 4093\n   name LEAF_PEER_L3\n   trunk group
     LEAF_PEER_L3\n!\nvlan 4094\n   name MLAG_PEER\n   trunk group MLAG\n!\nvrf instance
@@ -549,7 +549,7 @@ cvp_configlets:
     s1-spine1\ndns domain atd.lab\n!\nntp server 192.168.0.1 iburst local-interface
     Management0\n!\nspanning-tree mode none\n!\naaa authorization exec default local\n!\nno
     enable password\nno aaa root\n!\nusername arista privilege 15 role network-admin
-    secret sha512 $6$workshop$eP9ah1.lz/PavUqYDMFs0uUuKRl5qk57r/xmwhx8q4oLl2x/nC7.H4dBTHnBibYoaUGxLdJxVkNIRHUVPSPwu.\n!\ninterface
+    secret sha512 $6$workshop$NxXz8.pajjvgAoUOuC7FKF0JVqJg2FR8t2NTfqHcmWtSqgJBVusBHiw8v4uqSSduF7qMNYizRBPctLyMR.XBj1\n!\ninterface
     Ethernet2\n   description P2P_LINK_TO_S1-LEAF1_Ethernet2\n   no shutdown\n   mtu
     9214\n   no switchport\n   ip address 172.20.1.144/31\n!\ninterface Ethernet3\n
     \  description P2P_LINK_TO_S1-LEAF2_Ethernet2\n   no shutdown\n   mtu 9214\n   no
@@ -612,7 +612,7 @@ cvp_configlets:
     s1-spine2\ndns domain atd.lab\n!\nntp server 192.168.0.1 iburst local-interface
     Management0\n!\nspanning-tree mode none\n!\naaa authorization exec default local\n!\nno
     enable password\nno aaa root\n!\nusername arista privilege 15 role network-admin
-    secret sha512 $6$workshop$eP9ah1.lz/PavUqYDMFs0uUuKRl5qk57r/xmwhx8q4oLl2x/nC7.H4dBTHnBibYoaUGxLdJxVkNIRHUVPSPwu.\n!\ninterface
+    secret sha512 $6$workshop$NxXz8.pajjvgAoUOuC7FKF0JVqJg2FR8t2NTfqHcmWtSqgJBVusBHiw8v4uqSSduF7qMNYizRBPctLyMR.XBj1\n!\ninterface
     Ethernet2\n   description P2P_LINK_TO_S1-LEAF1_Ethernet3\n   no shutdown\n   mtu
     9214\n   no switchport\n   ip address 172.20.1.146/31\n!\ninterface Ethernet3\n
     \  description P2P_LINK_TO_S1-LEAF2_Ethernet3\n   no shutdown\n   mtu 9214\n   no

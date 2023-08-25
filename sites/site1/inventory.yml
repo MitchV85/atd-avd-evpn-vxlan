@@ -4,7 +4,7 @@ SITE1:
     CVP:
       hosts:
         cvp:
-          ansible_host: mitchlab-2-54fb5468-eos.topo.testdrive.arista.com
+          ansible_host: <ATD Topology Link Here>
     SITE1_FABRIC:
       children:
         SITE1_SPINES:
@@ -15,8 +15,8 @@ SITE1:
           hosts:
             s1-leaf1:
             s1-leaf2:
-            # s1-leaf3:
-            # s1-leaf4:
+            s1-leaf3:
+            s1-leaf4:
             s1-brdr1:
             s1-brdr2:
     SITE1_FABRIC_SERVICES:
