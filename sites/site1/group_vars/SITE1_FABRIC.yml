@@ -1,6 +1,6 @@
 ---
 
-fabric_name: DC1_FABRIC
+fabric_name: SITE1_FABRIC
 
 underlay_routing_protocol: ebgp
 overlay_routing_protocol: ebgp
